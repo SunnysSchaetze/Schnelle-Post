@@ -89,9 +89,6 @@ img {
         forwards;
 }
 
-
-/* Lichtstrahlen */
-
 .glitzer::before,
 .glitzer::after {
     content: "";
@@ -106,9 +103,6 @@ img {
 
     pointer-events: none;
 }
-
-
-/* Horizontal */
 
 .glitzer::before {
     width: 185%;
@@ -130,9 +124,6 @@ img {
     filter: blur(.3px);
 }
 
-
-/* Vertikal */
-
 .glitzer::after {
     width: 14%;
     height: 185%;
@@ -152,9 +143,6 @@ img {
     border-radius: 999px;
     filter: blur(.3px);
 }
-
-
-/* Größerer Stern */
 
 .glitzer.long {
     filter:
@@ -358,7 +346,6 @@ img {
         forwards;
 }
 
-
 @keyframes flash {
 
     0% {
@@ -399,19 +386,15 @@ img {
 
 <body>
 
-<a href="https://www.sunnysschaetze.de/home/sunnys-kleines-hilfezentrum" target="_blank">
+<a href="https://www.sunnysschaetze.de/home/sunnys-schnelle-post" target="_blank">
     <img
-        src="https://cdn-icons-png.flaticon.com/512/5074/5074458.png"
-        alt="Beratungsstelle Icon"
+        src="https://cdn-icons-png.flaticon.com/512/2540/2540874.png"
+        alt="Zeitung Icon"
     >
 </a>
 
 
 <script>
-
-/* =========================================================
-   EINSTELLUNGEN
-   ========================================================= */
 
 let letzteX = 0;
 let letzteY = 0;
@@ -423,10 +406,6 @@ let aktiveGlitzer = 0;
 const MAX_GLITZER = 180;
 
 
-/* =========================================================
-   MAUSBEWEGUNG
-   ========================================================= */
-
 document.addEventListener("mousemove", function(event) {
 
     erzeugeBewegungsEffekt(
@@ -436,10 +415,6 @@ document.addEventListener("mousemove", function(event) {
 
 });
 
-
-/* =========================================================
-   TOUCH-BEWEGUNG
-   ========================================================= */
 
 document.addEventListener("touchmove", function(event) {
 
@@ -459,10 +434,6 @@ document.addEventListener("touchmove", function(event) {
 });
 
 
-/* =========================================================
-   KLICK
-   ========================================================= */
-
 document.addEventListener("click", function(event) {
 
     klickEffekt(
@@ -472,10 +443,6 @@ document.addEventListener("click", function(event) {
 
 });
 
-
-/* =========================================================
-   BEWEGUNGS-EFFEKT
-   ========================================================= */
 
 function erzeugeBewegungsEffekt(x, y) {
 
@@ -619,10 +586,6 @@ function erzeugeBewegungsEffekt(x, y) {
 }
 
 
-/* =========================================================
-   HAUPT-GLITZER
-   ========================================================= */
-
 function createGlitzer(
     x,
     y,
@@ -646,16 +609,21 @@ function createGlitzer(
         : "glitzer";
 
 
-    const color =
-        Math.random() < .5
-        ? "#ff8500"
-        : "#ffe000";
+    if (Math.random() < .5) {
 
+        glitzer.style.setProperty(
+            "--color",
+            "#ff8500"
+        );
 
-    glitzer.style.setProperty(
-        "--color",
-        color
-    );
+    } else {
+
+        glitzer.style.setProperty(
+            "--color",
+            "#ffe000"
+        );
+
+    }
 
 
     const size =
@@ -779,10 +747,6 @@ function createGlitzer(
 }
 
 
-/* =========================================================
-   GLITZERSTAUB
-   ========================================================= */
-
 function createStaub(x, y) {
 
     if (aktiveGlitzer >= MAX_GLITZER) {
@@ -797,16 +761,21 @@ function createStaub(x, y) {
     staub.className = "staub";
 
 
-    const color =
-        Math.random() < .5
-        ? "#ff8500"
-        : "#ffe000";
+    if (Math.random() < .5) {
 
+        staub.style.setProperty(
+            "--color",
+            "#ff8500"
+        );
 
-    staub.style.setProperty(
-        "--color",
-        color
-    );
+    } else {
+
+        staub.style.setProperty(
+            "--color",
+            "#ffe000"
+        );
+
+    }
 
 
     const size =
@@ -881,10 +850,6 @@ function createStaub(x, y) {
 }
 
 
-/* =========================================================
-   KLICK-EFFEKT / EXPLOSION
-   ========================================================= */
-
 function klickEffekt(x, y) {
 
     const flash =
@@ -933,10 +898,6 @@ function klickEffekt(x, y) {
 }
 
 
-/* =========================================================
-   EXPLOSIONS-GLITZER
-   ========================================================= */
-
 function createExplosionsGlitzer(
     x,
     y,
@@ -958,16 +919,21 @@ function createExplosionsGlitzer(
         : "glitzer";
 
 
-    const color =
-        Math.random() < .5
-        ? "#ff8500"
-        : "#ffe000";
+    if (Math.random() < .5) {
 
+        glitzer.style.setProperty(
+            "--color",
+            "#ff8500"
+        );
 
-    glitzer.style.setProperty(
-        "--color",
-        color
-    );
+    } else {
+
+        glitzer.style.setProperty(
+            "--color",
+            "#ffe000"
+        );
+
+    }
 
 
     const size =
@@ -1088,10 +1054,6 @@ function createExplosionsGlitzer(
 }
 
 
-/* =========================================================
-   EXPLOSIONS-STAUB
-   ========================================================= */
-
 function createExplosionStaub(x, y) {
 
     if (aktiveGlitzer >= MAX_GLITZER) {
@@ -1107,16 +1069,21 @@ function createExplosionStaub(x, y) {
         "staub";
 
 
-    const color =
-        Math.random() < .5
-        ? "#ff8500"
-        : "#ffe000";
+    if (Math.random() < .5) {
 
+        staub.style.setProperty(
+            "--color",
+            "#ff8500"
+        );
 
-    staub.style.setProperty(
-        "--color",
-        color
-    );
+    } else {
+
+        staub.style.setProperty(
+            "--color",
+            "#ffe000"
+        );
+
+    }
 
 
     const size =
