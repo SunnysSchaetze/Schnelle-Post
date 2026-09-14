@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>News Icon</title>
+
 <style>
 body {
     margin: 0;
@@ -13,6 +14,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
 }
 
 a img {
@@ -20,19 +23,436 @@ a img {
     height: auto;
     transition: transform 0.3s ease, filter 0.3s ease;
     cursor: pointer;
+    -webkit-user-drag: none;
 }
 
 a img:hover {
     transform: scale(1.2);
     filter: brightness(1.5) drop-shadow(0 0 10px orange);
 }
+
+/* ✨ Glitzer */
+.glitzer {
+    position: fixed;
+    pointer-events: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe000 0%, #ff8500 45%, transparent 75%);
+    box-shadow:
+        0 0 6px #ffe000,
+        0 0 12px #ff8500,
+        0 0 20px rgba(255, 133, 0, 0.7);
+    z-index: 9999;
+    animation: cursorTrail 1200ms ease-out forwards;
+}
+
+.glitzer::before,
+.glitzer::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffe000;
+    box-shadow: 0 0 8px #ff8500;
+}
+
+.glitzer::before {
+    width: 2px;
+    height: 16px;
+}
+
+.glitzer::after {
+    width: 16px;
+    height: 2px;
+}
+
+.glitzer.long {
+    width: 11px;
+    height: 11px;
+}
+
+.glitzer.long::before {
+    height: 24px;
+}
+
+.glitzer.long::after {
+    width: 24px;
+}
+
+/* ✨ Cursor-Schweif */
+@keyframes cursorTrail {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5) rotate(0deg);
+    }
+
+    25% {
+        opacity: 1;
+        transform: translate(var(--move-x), var(--move-y))
+                   scale(1.2) rotate(45deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(
+            calc(var(--move-x) * 2),
+            calc(var(--move-y) * 2)
+        ) scale(0.2) rotate(180deg);
+    }
+}
+
+/* ✨ Glitzerstaub */
+.staub {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    background: #ff8500;
+    box-shadow:
+        0 0 5px #ff8500,
+        0 0 10px #ffe000;
+    z-index: 9998;
+    animation: staubTrail 900ms ease-out forwards;
+}
+
+@keyframes staubTrail {
+    0% {
+        opacity: 0.9;
+        transform: translate(0, 0) scale(0.5);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: translate(
+            var(--dust-x),
+            var(--dust-y)
+        ) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(
+            calc(var(--dust-x) * 2),
+            calc(var(--dust-y) * 2)
+        ) scale(0);
+    }
+}
+
+/* 💥 Klick-Blitz */
+.klick-flash {
+    position: fixed;
+    pointer-events: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        #ffffff 0%,
+        #ffe000 25%,
+        #ff8500 55%,
+        transparent 75%
+    );
+    box-shadow:
+        0 0 15px #ffffff,
+        0 0 30px #ffe000,
+        0 0 50px #ff8500;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    animation: flash 450ms ease-out forwards;
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.3);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+    }
+}
 </style>
 </head>
+
 <body>
 
 <a href="https://www.sunnysschaetze.de/home/sunnys-schnelle-post" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/2540/2540874.png" alt="Zeitung Icon">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/2540/2540874.png"
+        alt="Zeitung Icon"
+    >
 </a>
+
+<script>
+let letzteX = 0;
+let letzteY = 0;
+let letzteZeit = 0;
+
+const MAX_GLITZER = 180;
+
+/* ✨ Cursorbewegung */
+document.addEventListener("mousemove", (e) => {
+    const jetzt = Date.now();
+
+    if (jetzt - letzteZeit < 12) return;
+
+    const dx = e.clientX - letzteX;
+    const dy = e.clientY - letzteY;
+
+    letzteX = e.clientX;
+    letzteY = e.clientY;
+    letzteZeit = jetzt;
+
+    const bewegung = Math.sqrt(dx * dx + dy * dy);
+
+    if (bewegung < 1) return;
+
+    erzeugeBewegungsEffekt(e.clientX, e.clientY, dx, dy);
+});
+
+/* 📱 Auch für Touch */
+document.addEventListener("touchmove", (e) => {
+    if (!e.touches.length) return;
+
+    const touch = e.touches[0];
+
+    erzeugeBewegungsEffekt(
+        touch.clientX,
+        touch.clientY,
+        touch.clientX - letzteX,
+        touch.clientY - letzteY
+    );
+
+    letzteX = touch.clientX;
+    letzteY = touch.clientY;
+}, { passive: true });
+
+
+function erzeugeBewegungsEffekt(x, y, dx, dy) {
+
+    if (document.querySelectorAll(".glitzer").length < MAX_GLITZER) {
+        createGlitzer(x, y, dx, dy);
+    }
+
+    if (Math.random() < 0.7) {
+        createStaub(x, y);
+    }
+}
+
+
+/* ✨ Einzelner Glitzer */
+function createGlitzer(x, y, dx, dy) {
+
+    const glitzer = document.createElement("div");
+
+    glitzer.className =
+        Math.random() < 0.18
+            ? "glitzer long"
+            : "glitzer";
+
+    const groesse =
+        Math.random() * 4 + 4;
+
+    glitzer.style.width = groesse + "px";
+    glitzer.style.height = groesse + "px";
+
+    glitzer.style.left = x + "px";
+    glitzer.style.top = y + "px";
+
+    glitzer.style.background =
+        Math.random() < 0.5
+            ? "radial-gradient(circle, #ff8500 0%, #ff8500 45%, transparent 75%)"
+            : "radial-gradient(circle, #ffe000 0%, #ff8500 45%, transparent 75%)";
+
+    glitzer.style.setProperty(
+        "--move-x",
+        (-dx * 0.7) + "px"
+    );
+
+    glitzer.style.setProperty(
+        "--move-y",
+        (-dy * 0.7) + "px"
+    );
+
+    glitzer.style.animationDuration =
+        (900 + Math.random() * 550) + "ms";
+
+    document.body.appendChild(glitzer);
+
+    setTimeout(() => {
+        glitzer.remove();
+    }, 1600);
+}
+
+
+/* ✨ Staub */
+function createStaub(x, y) {
+
+    const staub = document.createElement("div");
+
+    staub.className = "staub";
+
+    const groesse =
+        Math.random() * 4 + 3;
+
+    staub.style.width = groesse + "px";
+    staub.style.height = groesse + "px";
+
+    staub.style.left =
+        (x + (Math.random() * 12 - 6)) + "px";
+
+    staub.style.top =
+        (y + (Math.random() * 12 - 6)) + "px";
+
+    staub.style.background =
+        Math.random() < 0.5
+            ? "#ff8500"
+            : "#ffe000";
+
+    staub.style.setProperty(
+        "--dust-x",
+        (Math.random() * 30 - 15) + "px"
+    );
+
+    staub.style.setProperty(
+        "--dust-y",
+        (Math.random() * 30 - 15) + "px"
+    );
+
+    staub.style.animationDuration =
+        (700 + Math.random() * 500) + "ms";
+
+    document.body.appendChild(staub);
+
+    setTimeout(() => {
+        staub.remove();
+    }, 1400);
+}
+
+
+/* 💥 Klick auf Zeitung */
+document.querySelector("a").addEventListener("click", (e) => {
+
+    const x = e.clientX;
+    const y = e.clientY;
+
+    klickEffekt(x, y);
+});
+
+
+/* 💥 Gesamter Klick-Effekt */
+function klickEffekt(x, y) {
+
+    /* Zentraler Blitz */
+    const flash = document.createElement("div");
+
+    flash.className = "klick-flash";
+
+    flash.style.left = x + "px";
+    flash.style.top = y + "px";
+
+    document.body.appendChild(flash);
+
+    setTimeout(() => {
+        flash.remove();
+    }, 500);
+
+
+    /* ✨ Explosions-Glitzer */
+    for (let i = 0; i < 18; i++) {
+        createExplosionsGlitzer(x, y);
+    }
+
+    /* ✨ Explosions-Staub */
+    for (let i = 0; i < 18; i++) {
+        createExplosionStaub(x, y);
+    }
+}
+
+
+/* ✨ Explosions-Sterne */
+function createExplosionsGlitzer(x, y) {
+
+    const glitzer = document.createElement("div");
+
+    glitzer.className =
+        Math.random() < 0.2
+            ? "glitzer long"
+            : "glitzer";
+
+    const groesse =
+        Math.random() * 7 + 7;
+
+    glitzer.style.width = groesse + "px";
+    glitzer.style.height = groesse + "px";
+
+    glitzer.style.left = x + "px";
+    glitzer.style.top = y + "px";
+
+    glitzer.style.setProperty(
+        "--move-x",
+        (Math.random() * 240 - 120) + "px"
+    );
+
+    glitzer.style.setProperty(
+        "--move-y",
+        (Math.random() * 240 - 120) + "px"
+    );
+
+    glitzer.style.animationDuration =
+        (500 + Math.random() * 350) + "ms";
+
+    document.body.appendChild(glitzer);
+
+    setTimeout(() => {
+        glitzer.remove();
+    }, 1000);
+}
+
+
+/* ✨ Explosions-Staub */
+function createExplosionStaub(x, y) {
+
+    const staub = document.createElement("div");
+
+    staub.className = "staub";
+
+    const groesse =
+        Math.random() * 4 + 3;
+
+    staub.style.width = groesse + "px";
+    staub.style.height = groesse + "px";
+
+    staub.style.left = x + "px";
+    staub.style.top = y + "px";
+
+    staub.style.setProperty(
+        "--dust-x",
+        (Math.random() * 260 - 130) + "px"
+    );
+
+    staub.style.setProperty(
+        "--dust-y",
+        (Math.random() * 260 - 130) + "px"
+    );
+
+    staub.style.animationDuration =
+        (450 + Math.random() * 400) + "ms";
+
+    document.body.appendChild(staub);
+
+    setTimeout(() => {
+        staub.remove();
+    }, 1000);
+}
+</script>
 
 </body>
 </html>
